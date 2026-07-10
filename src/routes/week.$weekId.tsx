@@ -10,6 +10,19 @@ export const Route = createFileRoute("/week/$weekId")({
     if (!week) throw notFound();
     return { week };
   },
+  head: ({ loaderData }) => {
+    const week = loaderData?.week;
+    return {
+      meta: [
+        {
+          title: week
+            ? `Week ${week.id}: ${week.title} — Robotics for Drift`
+            : "Week — Robotics for Drift",
+        },
+        { name: "description", content: week?.objective ?? "" },
+      ],
+    };
+  },
 });
 
 function WeekPage() {
@@ -25,7 +38,9 @@ function WeekPage() {
     <Shell>
       <section className="border-b border-border">
         <div className="mx-auto max-w-5xl px-6 pt-12 pb-16">
-          <Link to="/" className="mono-label hover:text-signal-ink">← All weeks</Link>
+          <Link to="/" className="mono-label hover:text-signal-ink">
+            ← All weeks
+          </Link>
           <div className="mt-6 grid md:grid-cols-12 gap-8">
             <div className="md:col-span-2">
               <p className="mono-label">Week</p>
@@ -39,7 +54,9 @@ function WeekPage() {
                 <span className="mono-label">Pass bar</span>
                 <span className="text-sm">{week.passBar}</span>
               </div>
-              <div className="mt-4 mono-label">{doneN} / {wDays.length} lessons complete</div>
+              <div className="mt-4 mono-label">
+                {doneN} / {wDays.length} lessons complete
+              </div>
             </div>
           </div>
         </div>
@@ -58,9 +75,11 @@ function WeekPage() {
               >
                 <div className="grid md:grid-cols-12 gap-6 p-5">
                   <div className="md:col-span-2 flex items-center gap-3">
-                    <div className={`h-8 w-8 grid place-items-center font-mono text-xs border ${
-                      isDone ? "bg-signal border-signal text-signal-ink" : "border-border"
-                    }`}>
+                    <div
+                      className={`h-8 w-8 grid place-items-center font-mono text-xs border ${
+                        isDone ? "bg-signal border-signal text-signal-ink" : "border-border"
+                      }`}
+                    >
                       {isDone ? "✓" : d.isLab ? "L" : d.id}
                     </div>
                     <span className="mono-label">{d.isLab ? "Lab" : `Day ${d.id}`}</span>
@@ -80,15 +99,27 @@ function WeekPage() {
       <section className="border-t border-border">
         <div className="mx-auto max-w-5xl px-6 py-8 flex justify-between">
           {prev ? (
-            <Link to="/week/$weekId" params={{ weekId: String(prev.id) }} className="mono-label hover:text-signal-ink">
+            <Link
+              to="/week/$weekId"
+              params={{ weekId: String(prev.id) }}
+              className="mono-label hover:text-signal-ink"
+            >
               ← Week {prev.id}: {prev.title}
             </Link>
-          ) : <span />}
+          ) : (
+            <span />
+          )}
           {next ? (
-            <Link to="/week/$weekId" params={{ weekId: String(next.id) }} className="mono-label hover:text-signal-ink ml-auto text-right">
+            <Link
+              to="/week/$weekId"
+              params={{ weekId: String(next.id) }}
+              className="mono-label hover:text-signal-ink ml-auto text-right"
+            >
               Week {next.id}: {next.title} →
             </Link>
-          ) : <span />}
+          ) : (
+            <span />
+          )}
         </div>
       </section>
     </Shell>
