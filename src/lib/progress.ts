@@ -9,7 +9,9 @@ export function useProgress() {
     try {
       const raw = localStorage.getItem(KEY);
       if (raw) setDone(new Set(JSON.parse(raw)));
-    } catch {}
+    } catch {
+      /* localStorage unavailable */
+    }
   }, []);
 
   const toggle = (id: number) => {
@@ -19,7 +21,9 @@ export function useProgress() {
       else next.add(id);
       try {
         localStorage.setItem(KEY, JSON.stringify([...next]));
-      } catch {}
+      } catch {
+        /* localStorage unavailable */
+      }
       return next;
     });
   };
@@ -28,7 +32,9 @@ export function useProgress() {
     setDone(new Set());
     try {
       localStorage.removeItem(KEY);
-    } catch {}
+    } catch {
+      /* localStorage unavailable */
+    }
   };
 
   return { done, toggle, reset };
