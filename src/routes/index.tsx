@@ -6,7 +6,7 @@ import { useProgress } from "../lib/progress";
 export const Route = createFileRoute("/")({ component: Index });
 
 function Index() {
-  const { done } = useProgress();
+  const { done, reset } = useProgress();
   const totalLessons = days.length;
   const doneCount = [...done].filter((id) => days.some((d) => d.id === id)).length;
   const pct = Math.round((doneCount / totalLessons) * 100);
@@ -14,9 +14,9 @@ function Index() {
   return (
     <Shell>
       {/* HERO */}
-      <section className="border-b border-border">
+      <section className="border-b border-border eng-grid">
         <div className="mx-auto max-w-6xl px-6 pt-16 pb-20 grid md:grid-cols-12 gap-10">
-          <div className="md:col-span-8">
+          <div className="md:col-span-8 reg-tick pl-3 pt-2">
             <p className="mono-label">A field course for growth marketers</p>
             <h1 className="font-serif text-6xl md:text-7xl leading-[0.95] mt-6">
               {course.title}.
@@ -34,7 +34,11 @@ function Index() {
               >
                 Start Day 1 →
               </Link>
-              <Link to="/week/$weekId" params={{ weekId: "1" }} className="border border-ink px-6 py-3 hover:bg-secondary transition-colors">
+              <Link
+                to="/week/$weekId"
+                params={{ weekId: "1" }}
+                className="border border-ink px-6 py-3 hover:bg-secondary transition-colors"
+              >
                 Browse Week 1
               </Link>
               <span className="mono-label">{course.meta}</span>
@@ -42,8 +46,13 @@ function Index() {
           </div>
           <aside className="md:col-span-4 border-l border-border pl-8">
             <p className="mono-label">Your progress</p>
-            <div className="font-serif text-6xl mt-3">{pct}<span className="text-2xl text-muted-foreground">%</span></div>
-            <p className="text-sm text-muted-foreground mt-1">{doneCount} of {totalLessons} lessons complete</p>
+            <div className="font-serif text-6xl mt-3">
+              {pct}
+              <span className="text-2xl text-muted-foreground">%</span>
+            </div>
+            <p className="text-sm text-muted-foreground mt-1">
+              {doneCount} of {totalLessons} lessons complete
+            </p>
             <div className="mt-4 h-2 bg-secondary relative overflow-hidden">
               <div className="absolute inset-y-0 left-0 bg-signal" style={{ width: `${pct}%` }} />
             </div>
@@ -54,11 +63,23 @@ function Index() {
                 return (
                   <li key={w.id} className="flex justify-between">
                     <span>Week {w.id}</span>
-                    <span className="font-mono">{d}/{wDays.length}</span>
+                    <span className="font-mono">
+                      {d}/{wDays.length}
+                    </span>
                   </li>
                 );
               })}
             </ul>
+            {doneCount > 0 && (
+              <button
+                onClick={() => {
+                  if (window.confirm("Reset all lesson progress? Quiz answers stay.")) reset();
+                }}
+                className="mono-label mt-6 border border-border px-3 py-1.5 hover:bg-secondary"
+              >
+                Reset progress
+              </button>
+            )}
           </aside>
         </div>
       </section>
@@ -90,7 +111,9 @@ function Index() {
             <ul className="mt-6 space-y-3">
               {course.covers.map((c, i) => (
                 <li key={i} className="flex gap-3 border-t border-border pt-3">
-                  <span className="mono-label text-signal-ink shrink-0">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="mono-label text-signal-ink shrink-0">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
                   <span className="text-foreground/85">{c}</span>
                 </li>
               ))}
@@ -103,7 +126,9 @@ function Index() {
               {course.skips.map((c, i) => (
                 <li key={i} className="flex gap-3 border-t border-border pt-3">
                   <span className="mono-label text-destructive shrink-0">✕</span>
-                  <span className="text-foreground/70 line-through decoration-1 decoration-destructive/40">{c}</span>
+                  <span className="text-foreground/70 line-through decoration-1 decoration-destructive/40">
+                    {c}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -140,7 +165,9 @@ function Index() {
                     <div className="md:col-span-7">
                       <h3 className="font-serif text-2xl group-hover:text-signal-ink">{w.title}</h3>
                       <p className="text-muted-foreground mt-1">{w.subtitle}</p>
-                      <p className="mt-4 text-sm text-foreground/80 leading-relaxed">{w.objective}</p>
+                      <p className="mt-4 text-sm text-foreground/80 leading-relaxed">
+                        {w.objective}
+                      </p>
                     </div>
                     <div className="md:col-span-3 flex flex-col justify-between border-l border-border pl-6">
                       <div>
@@ -150,7 +177,9 @@ function Index() {
                             <span
                               key={d.id}
                               className={`h-6 w-6 grid place-items-center font-mono text-[10px] border ${
-                                done.has(d.id) ? "bg-signal border-signal text-signal-ink" : "border-border text-muted-foreground"
+                                done.has(d.id)
+                                  ? "bg-signal border-signal text-signal-ink"
+                                  : "border-border text-muted-foreground"
                               }`}
                             >
                               {d.isLab ? "L" : d.id}
@@ -158,7 +187,9 @@ function Index() {
                           ))}
                         </div>
                       </div>
-                      <p className="mono-label mt-4">{doneN}/{wDays.length} done →</p>
+                      <p className="mono-label mt-4">
+                        {doneN}/{wDays.length} done →
+                      </p>
                     </div>
                   </div>
                 </Link>
